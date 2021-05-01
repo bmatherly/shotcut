@@ -17,6 +17,7 @@
 
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import Shotcut.Controls 1.0 as Shotcut
 
 Rectangle {
     property real timeScale: 1.0
@@ -49,6 +50,14 @@ Rectangle {
                 text: application.timecode(index * intervalSeconds * profile.fps + 2).substr(0, 8)
             }
         }
+    }
+
+    Shotcut.MarkerBar {
+        anchors.top: rulerTop.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        timeScale: root.timeScale
+        model: markers
     }
 
     MouseArea {

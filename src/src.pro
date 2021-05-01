@@ -130,6 +130,7 @@ SOURCES += main.cpp\
     docks/keyframesdock.cpp \
     qmltypes/qmlproducer.cpp \
     models/keyframesmodel.cpp \
+    models/markersmodel.cpp \
     widgets/slideshowgeneratorwidget.cpp \
     widgets/textproducerwidget.cpp \
     dialogs/listselectiondialog.cpp \
@@ -266,6 +267,7 @@ HEADERS  += mainwindow.h \
     docks/keyframesdock.h \
     qmltypes/qmlproducer.h \
     models/keyframesmodel.h \
+    models/markersmodel.h \
     widgets/slideshowgeneratorwidget.h \
     widgets/textproducerwidget.h \
     dialogs/listselectiondialog.h \

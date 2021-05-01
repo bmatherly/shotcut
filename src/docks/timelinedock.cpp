@@ -56,6 +56,7 @@ TimelineDock::TimelineDock(QWidget *parent) :
     toggleViewAction()->setIcon(windowIcon());
 
     qmlRegisterType<MultitrackModel>("Shotcut.Models", 1, 0, "MultitrackModel");
+    qmlRegisterType<MarkersModel>("Shotcut.Models", 1, 0, "MarkersModel");
 
     QDir importPath = QmlUtilities::qmlDir();
     importPath.cd("modules");
@@ -65,6 +66,7 @@ TimelineDock::TimelineDock(QWidget *parent) :
     m_quickView.rootContext()->setContextProperty("view", new QmlView(&m_quickView));
     m_quickView.rootContext()->setContextProperty("timeline", this);
     m_quickView.rootContext()->setContextProperty("multitrack", &m_model);
+    m_quickView.rootContext()->setContextProperty("markers", &m_markersModel);
     m_quickView.setResizeMode(QQuickWidget::SizeRootObjectToView);
     m_quickView.setClearColor(palette().window().color());
     m_quickView.quickWindow()->setPersistentSceneGraph(false);
@@ -79,6 +81,9 @@ TimelineDock::TimelineDock(QWidget *parent) :
     connect(&m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(onRowsInserted(QModelIndex,int,int)));
     connect(&m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(onRowsRemoved(QModelIndex,int,int)));
     connect(&m_model, SIGNAL(closed()), SLOT(onMultitrackClosed()));
+    connect(&m_model, SIGNAL(created()), SLOT(reloadTimelineMarkers()));
+    connect(&m_model, SIGNAL(loaded()), SLOT(reloadTimelineMarkers()));
+    connect(&m_model, SIGNAL(closed()), SLOT(reloadTimelineMarkers()));
 
     setWidget(&m_quickView);
 
@@ -1204,6 +1209,12 @@ void TimelineDock::onMultitrackClosed()
     m_blockSetSelection = false;
     setSelection();
     emit resetZoom();
+}
+
+void TimelineDock::reloadTimelineMarkers()
+{
+qDebug() << m_model.tractor();
+    m_markersModel.load(m_model.tractor());
 }
 
 void TimelineDock::overwrite(int trackIndex, int position, const QString &xml, bool seek)
